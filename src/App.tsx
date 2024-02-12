@@ -92,7 +92,7 @@ export const App = () => {
 
   const [botaoTaxonomiaClicado, setBotaoTaxonomiaClicado] = useState(``);
   
-  const [urlGeral, setUrlGeral] = useState('http://200.128.66.226:8080/');
+  const [urlGeral, setUrlGeral] = useState('https://iapos-api.senaicimatec.com.br/');
   const [pesquisadoresSelecionadosGroupBarema, setPesquisadoresSelecionadosGroupBarema] = useState('');
   const [user, setUser] = useState<User>({ img_url: '', state: '', email: '', name: '', institution_id: '',...{} } as User);
   const [isOn, setIsOn] = useState(false);

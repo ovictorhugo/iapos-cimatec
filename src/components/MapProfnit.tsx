@@ -213,7 +213,36 @@ export function MapProfnit(props: Props) {
 
   const [chart, setChart] = useState(null);
 
-  const urlGraduateProgram = `${urlGeral}/graduate_program_profnit?id=${props.id}`;
+  const urlGraduateProgram = `${urlGeral}/graduate_program_profnit?id=fdd8b743-9664-4177-84ca-757146a93580`;
+  const [graduateProgram, setGraduatePogram] = useState<GraduateProgram[]>([]);
+ 
+  console.log("idprogram" + idGraduateProgram)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(urlGraduateProgram, {
+          mode: 'cors',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '3600',
+            'Content-Type': 'text/plain'
+          }
+        });
+        const data = await response.json();
+        if (data) {
+          setGraduatePogram(data);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+
+      }
+    };
+    fetchData();
+  }, [urlGraduateProgram]);
 
  
 
@@ -564,25 +593,25 @@ useEffect(() => {
     setValoresSelecionadosExport(valoresSelecionadosNuvem)
   }
 },[]); // Empty dependency array ensures the effect runs only once during component mount
-    
+
 
   return (
     <div className="   ">
 
 <div className="overflow-hidden absolute   w-full">
        
-       <div className="z-[-999999999] w-[120%] h-[70vh] absolute top-[00px] left-[-100px]">
+       <div className="z-[-999999999] w-[120%] h-[100vh] absolute top-[00px] left-[-100px]">
          <HighchartsReact highcharts={Highcharts} options={chartOptions} />
        </div>
       
 
        <div className="rounded-lg">
-         <div className=" min-h-[340px] flex items-center">
+         <div className=" min-h-[340px] flex items-center z-[99999999999999999999999]">
            <div className=" w-full h-full items-start justify-start testeeee grid grid-cols-2">
-             <div className=" flex flex-col  h-full transition ">
+             <div className=" flex flex-col h-full transition ">
            
               
-             <div className="pl-6 md:pl-16 flex justify-center h-[70vh] flex-col  w-fit">
+             <div className="pl-6 md:pl-16 flex justify-center h-[100vh] flex-col  w-fit">
         <div className="h-[350px] absolute  ml-16 "><Circle/></div>
         <h1 className="z-[999] text-4xl mb-4 font-medium max-w-[750px] ">Experimente
         <strong className="bg-red-400 text-white font-normal">
@@ -592,7 +621,67 @@ useEffect(() => {
       </h1>
           <p className=" z-[999] max-w-[620px]  text-lg text-gray-400">O principal objetivo desse sistema é identificar as competências individuais e coletivas dos profissionais na Bahia. </p>
 
-   
+          <div className=" overflow-x-hidden w-full  flex  left-0 my-6 ">
+          <div className="block z-[99999999999999999999999]  w-full overflow-x-auto whitespace-nowrap pb-4 element">
+            {graduateProgram.map(props => {
+              return (
+                <Link to={"/result"}
+                onClick={() => handleClick(props.graduate_program_id)}
+                  key={props.graduate_program_id}
+                  className=" checkboxLabel z-[99999999999999999999999] group list-none h-full inline-flex mr-4 group w-[350px]"
+                  onMouseDown={(e) => e.preventDefault()}
+                >
+                  <label className={`justify-between w-full p-6 flex-col cursor-pointer border-[1px] bg-white bg-opacity-60 backdrop-blur-sm border-gray-300 flex text-gray-400 rounded-xl text-xs font-bold hover:border-blue-400 hover:bg-blue-100 ${idGraduateProgram === props.graduate_program_id ? 'activeTab bg-opacity-80 backdrop-blur-sm' : ''}`}>
+                    <div className="flex flex-col">
+                      <div className="border-[1px] border-gray-300 py-2 flex px-4 text-gray-400 rounded-xl text-xs font-medium w-fit mb-4">{props.area}</div>
+                      <span className=" whitespace-normal text-base text-gray-400 mb-2 font-bold">{props.name}</span>
+                      <p className="font-medium">{props.code}</p>
+                    </div>
+
+                    <div className="flex gap-2 mt-8  whitespace-nowrap overflow-x-hidden">
+                      {props.type.split(';').map((value, index) => {
+                        const ratingValues = props.rating.split(';');
+                        const ratingDoutorado = ratingValues[0]; // Valor correspondente a DOUTORADO
+                        const ratingMestrado = ratingValues[1]; // Valor correspondente a MESTRADO
+
+                        return (
+                          <div
+                            key={index}
+                            className={`py-2 px-4 text-white w-fit rounded-md text-xs font-bold flex gap-2 items-center ${value.includes('MESTRADO') ? 'bg-blue-200' : 'bg-blue-300'
+                              }`}
+                          >
+                            <GraduationCap size={12} className="textwhite" />
+                            {value.trim()}
+                            <p className=" flex gap-2 items-center"><Star size={12} className="textwhite" /> {props.type.split(';').length == 2 ? (value.includes('MESTRADO') ? ratingMestrado : ratingDoutorado) : (props.rating)}</p>
+                          </div>
+                        );
+                      })}
+
+                      <div className="bg-blue-400 py-2 px-4 text-white rounded-md text-xs font-bold flex gap-2 items-center">
+                        <BookmarkSimple size={12} className="textwhite" />
+                        {props.modality}
+                      </div>
+                    </div>
+
+
+                    <input
+                      type="checkbox"
+                      name={props.name}
+                      className="absolute hidden group"
+                      onClick={() => handleClick(props.graduate_program_id)}
+                      id={props.name}
+
+                    />
+                  </label>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+
+
+
+
           
           {idVersao === "2"  || idVersao === "4" ? (
               <div className=" flex  rounded-md items-center  bg-opacity-80 z-[99] flex-wrap gap-6 mt-8 relative">
@@ -622,7 +711,7 @@ useEffect(() => {
      </div>
 
 
-     <div className="pt-[60vh] flex flex-1 flex-col relative  items-center  ">
+     <div className="pt-[100vh] flex flex-1 flex-col relative  items-center  ">
 
     
 
